@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'green_ellipse' : "url('/light-green-ellipse-bg.svg')",
+      },
       fontFamily: {
         sans: ['"Inter var", sans-serif'],
       },

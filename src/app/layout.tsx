@@ -16,8 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} max-w-[414px] mx-auto bg-ccGray`}>
-        <main className="flex min-h-screen flex-col items-center justify-center bg-ccGreen text-white">
+      <body className={`${inter.className} mx-auto bg-ccGray flex justify-center`}>
+        <main className="flex min-h-screen flex-col items-center max-w-[500px] w-full justify-center bg-ccGreen text-white">
           {children}
         </main>
       </body>
