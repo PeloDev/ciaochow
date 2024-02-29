@@ -16,8 +16,10 @@ const config: Config = {
       },
       colors: {
         ccGreen: "#4CAD73",
+        ccGreenAlt: "#0EB177",
         ccGray: "#BDBDBD",
         ccBlack: "#333333",
+        ccFormBg: "#F2F2F2",
       },
     },
   },

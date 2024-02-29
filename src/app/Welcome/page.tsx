@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Welcome() {
   return (
-    <div className="px-5 py-9 w-full flex-1 flex flex-col bg-green_ellipse bg-no-repeat bg-contain justify-around">
+    <div className="px-5 py-9 w-full flex-1 flex flex-col bg-[center_top_-44px] bg-green_ellipse bg-no-repeat bg-contain justify-around">
       <div className="flex w-full items-center justify-center">
         <Logo />
       </div>
