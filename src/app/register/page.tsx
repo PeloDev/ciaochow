@@ -83,7 +83,7 @@ export default function Register() {
           />
         </div>
       </div>
-      <form onSubmit={onSubmit} className="w-full flex flex-col gap-3">
+      <form autoComplete="off" onSubmit={onSubmit} className="w-full flex flex-col gap-3">
         <FormInput
           name="username"
           label="username"
@@ -107,6 +107,11 @@ export default function Register() {
           inputProps={{
             placeholder: "••••••••",
             type: "password",
+            // Browsers may still autocomplete the password field,
+            // it turns out this attribute is merely a suggestion that they choose to ignore.
+            // See: https://stackoverflow.com/a/63867302
+            // TODO: should we just use a different input name, or just keep this behaviour?
+            autoComplete: "new-password",
           }}
         />
         <button className="text-white justify-center flex mt-4 bg-ccGreen rounded-[10px] p-[16px] font-semibold text-[18px]">
