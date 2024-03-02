@@ -1,12 +1,12 @@
 "use client";
+import React from "react";
 import Image from "next/image";
-import womanWithGroceries from "../assets/vectors/woman-groceries.svg";
-import chevronLeft from "../assets/vectors/chevron-left.svg";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import FormInput from "../components/hookForms/Input";
 import Link from "next/link";
+import { chevronLeft, passwordHidden, passwordVisible, womanWithGroceries } from "../assets/vectors";
 
 const registerFormSchema = z.object({
   username: z
@@ -55,6 +55,10 @@ export default function Register() {
   } = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
   });
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const onSubmit = handleSubmit((data) => console.log(data));
 
@@ -106,13 +110,24 @@ export default function Register() {
           control={control}
           inputProps={{
             placeholder: "••••••••",
-            type: "password",
+            type: showPassword ? "text" : "password",
             // Browsers may still autocomplete the password field,
             // it turns out this attribute is merely a suggestion that they choose to ignore.
             // See: https://stackoverflow.com/a/63867302
             // TODO: should we just use a different input name, or just keep this behaviour?
             autoComplete: "new-password",
           }}
+          iconRight={
+            <button type="button" onClick={togglePasswordVisibility}>
+              <Image
+                src={showPassword ? passwordVisible : passwordHidden}
+                alt={`password ${showPassword ? "visible" : "hidden"} icon`}
+                width={24}
+                height={20}
+                priority
+              />
+            </button>
+          }
         />
         <button className="text-white justify-center flex mt-4 bg-ccGreen rounded-[10px] p-[16px] font-semibold text-[18px]">
           Register

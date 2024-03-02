@@ -1,8 +1,7 @@
 import Logo from "../components/Logo";
-import womanWithGroceries from "../assets/vectors/woman-groceries.svg";
-import manWithGroceries from "../assets/vectors/man-groceries.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { manWithGroceries, womanWithGroceries } from "../assets/vectors";
 
 export default function Welcome() {
   return (

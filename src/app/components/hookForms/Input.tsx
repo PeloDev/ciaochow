@@ -8,11 +8,13 @@ interface IProps<FormValues extends FieldValues>
   extends UseControllerProps<FormValues> {
   label?: string;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  iconRight?: React.ReactNode;
 }
 
 export default function FormInput<FormValues extends FieldValues>({
   label,
   inputProps,
+  iconRight,
   ...props
 }: IProps<FormValues>) {
   const { field, fieldState } = useController(props);
@@ -22,14 +24,24 @@ export default function FormInput<FormValues extends FieldValues>({
       {!!label && (
         <label className="text-ccBlack font-medium text-sm">{label}</label>
       )}
-      <input
-        {...field}
-        {...inputProps}
-        className={`bg-ccFormBg text-xs text-ccBlack py-4 px-2 rounded-[10px] ${!!fieldState.error ? "border-red-600 border-[1px]" : ""} ${
-          inputProps?.className ?? ""
-        }`}
-      />
-      {!!fieldState.error && <p className="text-xs text-red-600">{fieldState.error.message}</p>}
+
+      <div className="flex flex-row justify-end items-center relative w-full">
+        <input
+          {...field}
+          {...inputProps}
+          className={`bg-ccFormBg text-xs text-ccBlack py-4 px-2 rounded-[10px] w-full ${
+            !!fieldState.error ? "border-red-600 border-[1px]" : ""
+          } ${inputProps?.className ?? ""}`}
+        />
+        {iconRight && (
+          <div className="flex items-center justify-center p-2 absolute">
+            {iconRight}
+          </div>
+        )}
+      </div>
+      {!!fieldState.error && (
+        <p className="text-xs text-red-600">{fieldState.error.message}</p>
+      )}
     </div>
   );
 }
