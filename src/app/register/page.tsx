@@ -129,7 +129,7 @@ export default function Register() {
             </button>
           }
         />
-        <button className="text-white justify-center flex mt-4 bg-ccGreen rounded-[10px] p-[16px] font-semibold text-[18px]">
+        <button className="text-white justify-center flex mt-4 bg-ccGreen rounded-[10px] p-[16px] font-semibold text-[18px] shadow-lg">
           Register
         </button>
       </form>
