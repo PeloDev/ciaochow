@@ -3,64 +3,47 @@ import React from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import FormInput from "../components/hookForms/Input";
 import Link from "next/link";
-import { chevronLeft, passwordHidden, passwordVisible, womanWithGroceries } from "../assets/vectors";
-
-const registerFormSchema = z.object({
-  username: z
-    .string({ required_error: "Please enter your username." })
-    .min(4, "Username must be at least 4 characters long")
-    .max(20, "Username must be no more than 20 characters long")
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Username must be alphanumeric with underscores allowed"
-    ),
-  email: z
-    .string({ required_error: "Please enter your email address." })
-    .trim()
-    .email({ message: "Please enter a valid email format." }),
-  password: z
-    .string({ required_error: "Please enter a new password." })
-    .min(8, "Password should be at least 8 characters long.")
-    .refine((value) => /[A-Z]/.test(value), {
-      message: "Password must contain at least one uppercase letter.",
-      path: [],
-    })
-    .refine((value) => /[a-z]/.test(value), {
-      message: "Password must contain at least one lowercase letter.",
-      path: [],
-    })
-    .refine((value) => /\d/.test(value), {
-      message: "Password must contain at least one digit.",
-      path: [],
-    })
-    .refine((value) => /[!@#$%^&*]/.test(value), {
-      message:
-        "Password must contain at least one special character (!@#$%^&*).",
-      path: [],
-    })
-    .refine((value) => !/\s/.test(value), {
-      message: "Password should not contain spaces.",
-      path: [],
-    }),
-});
+import {
+  chevronLeft,
+  passwordHidden,
+  passwordVisible,
+  womanWithGroceries,
+} from "../assets/vectors";
+import { useRegisterMutation } from "@/lib/redux/api/api-slice";
+import { RegisterFormData, RegisterFormSchema } from "../types/forms";
+import { isErrorResponse } from "../types";
+import { useRouter } from "next/router";
 
 export default function Register() {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof registerFormSchema>>({
-    resolver: zodResolver(registerFormSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterFormSchema),
   });
 
   const [showPassword, setShowPassword] = React.useState(false);
-
+  // TODO: loading and error states
+  const [register, { isLoading, error }] = useRegisterMutation();
+  const router = useRouter();
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      const response = await register(data);
+      if (isErrorResponse(response)) {
+        throw response.error;
+      }
+      // TODO: show success toast message and call to login
+      router.replace("login");
+    } catch (error) {
+      // TODO: show error toast message
+      console.error(error);
+    }
+  };
 
   return (
     <div className="px-5 py-9 w-full flex-1 flex flex-col bg-white bg-[center_top_-44px] bg-green_ellipse bg-no-repeat bg-contain gap-8">
@@ -87,7 +70,11 @@ export default function Register() {
           />
         </div>
       </div>
-      <form autoComplete="off" onSubmit={onSubmit} className="w-full flex flex-col gap-3">
+      <form
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-3"
+      >
         <FormInput
           name="username"
           label="username"
