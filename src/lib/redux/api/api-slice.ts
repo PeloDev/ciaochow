@@ -1,9 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import reduxConstants from "../reduxConstants";
 import { RootState } from "../store";
-import { ApiResponse } from "../../../app/types"; // TODO: should this be in lib?
+import {
+  ApiResponse,
+  LoginSuccessResponseData,
+  RegisterSuccessResponseData,
+} from "../../../app/types/api"; // TODO: should this be in lib?
+import { LoginFormData, RegisterFormData } from "@/app/types/forms";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
@@ -23,12 +28,17 @@ export const apiSlice = createApi({
   // map out the expected req/res of endpoints from the api
   endpoints: (builder) => {
     return {
-      login: builder.mutation({
-        query: (body) => ({
-          url: "auth/login",
-          method: "POST",
-          body,
-        }),
+      login: builder.mutation<LoginSuccessResponseData, LoginFormData>({
+        query: (body) => {
+          return {
+            url: "auth/local",
+            method: "POST",
+            body: {
+              identifier: body.email,
+              password: body.password,
+            },
+          };
+        },
       }),
       logout: builder.mutation<unknown, void>({
         query: () => ({
@@ -36,15 +46,17 @@ export const apiSlice = createApi({
           method: "POST",
         }),
       }),
-      register: builder.mutation({
-        query: (body) => {
-          return {
-            url: "auth/local/register",
-            method: "POST",
-            body,
-          };
-        },
-      }),
+      register: builder.mutation<RegisterSuccessResponseData, RegisterFormData>(
+        {
+          query: (body) => {
+            return {
+              url: "auth/local/register",
+              method: "POST",
+              body,
+            };
+          },
+        }
+      ),
       forgotPassword: builder.mutation({
         query: (body) => {
           return {

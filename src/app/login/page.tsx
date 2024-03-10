@@ -12,29 +12,37 @@ import {
   passwordHidden,
   passwordVisible,
 } from "../assets/vectors";
-
-const loginFormSchema = z.object({
-  email: z
-    .string({ required_error: "Please enter your email address." })
-    .trim()
-    .email({ message: "Please enter a valid email format." }),
-  password: z.string({ required_error: "Please enter a new password." }),
-});
+import { LoginFormData, LoginFormSchema } from "../types/forms";
+import { useLoginMutation } from "@/lib/redux/api/api-slice";
+import { isErrorResponse } from "../types/api";
+import { notifyErrorToast } from "@/lib/toast";
+import Spinner from "../components/Spinner";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { loginUser } from "@/lib/redux/features/user-slice";
 
 export default function Login() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const { control, handleSubmit } = useForm<z.infer<typeof LoginFormSchema>>({
+    resolver: zodResolver(LoginFormSchema),
   });
 
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [login, { isLoading, error }] = useLoginMutation();
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const response = await login(data);
+      if (isErrorResponse(response)) {
+        return;
+      }
+      dispatch(loginUser(response.data));
+    } catch (error) {
+      notifyErrorToast("Error during login.");
+      // TODO: send to logging service
+    }
+  };
 
   return (
     <div className="px-5 py-9 w-full flex-1 flex flex-col bg-white bg-[center_top_-44px] bg-green_ellipse bg-no-repeat bg-contain gap-8">
@@ -63,7 +71,7 @@ export default function Login() {
       </div>
       <form
         autoComplete="off"
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
       >
         <FormInput
@@ -73,6 +81,7 @@ export default function Login() {
           inputProps={{
             placeholder: "your.email@address.com",
           }}
+          isInErrorState={!!error}
         />
         <div>
           <FormInput
@@ -95,6 +104,7 @@ export default function Login() {
                 />
               </button>
             }
+            isInErrorState={!!error}
           />
           <div className="flex justify-end">
             <a
@@ -106,7 +116,7 @@ export default function Login() {
           </div>
         </div>
         <button className="text-white justify-center flex mt-4 bg-ccGreen rounded-[10px] p-[16px] font-semibold text-[18px] shadow-lg">
-          Login
+          {isLoading ? <Spinner /> : "Login"}
         </button>
       </form>
       <Link href="/register">

@@ -13,17 +13,17 @@ import {
 } from "../assets/vectors";
 import { useRegisterMutation } from "@/lib/redux/api/api-slice";
 import { RegisterFormData, RegisterFormSchema } from "../types/forms";
-import { isErrorResponse } from "../types";
+import { isErrorResponse } from "../types/api";
 import { useRouter } from "next/navigation";
-import { notifySuccessToast } from "@/lib/toast";
+import { notifyErrorToast, notifySuccessToast } from "@/lib/toast";
+import Spinner from "../components/Spinner";
 
 export default function Register() {
-  const { control, handleSubmit, formState } = useForm<RegisterFormData>({
+  const { control, handleSubmit } = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterFormSchema),
   });
 
   const [showPassword, setShowPassword] = React.useState(false);
-  // TODO: loading and error states
   const [register, { isLoading, error }] = useRegisterMutation();
   const router = useRouter();
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -39,8 +39,8 @@ export default function Register() {
         }, 1000);
       }
     } catch (error) {
-      // TODO: show error toast message
-      console.error(error);
+      notifyErrorToast("Error during registration.");
+      // TODO: send to logging service
     }
   };
 
@@ -119,7 +119,7 @@ export default function Register() {
           }
         />
         <button className="text-white justify-center flex mt-4 bg-ccGreen rounded-[10px] p-[16px] font-semibold text-[18px] shadow-lg">
-          Register
+          {isLoading ? <Spinner /> : "Register"}
         </button>
       </form>
       <Link href="/login">

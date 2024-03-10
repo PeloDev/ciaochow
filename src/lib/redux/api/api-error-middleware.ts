@@ -4,7 +4,7 @@ import {
   isCcApiError,
   isErrorResponse,
   isFetchBaseQueryError,
-} from "@/app/types";
+} from "@/app/types/api";
 import { notifyErrorToast } from "@/lib/toast";
 import { isRejectedWithValue } from "@reduxjs/toolkit";
 import type { MiddlewareAPI, Middleware } from "@reduxjs/toolkit";

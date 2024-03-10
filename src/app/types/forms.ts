@@ -5,11 +5,11 @@ export const RegisterFormSchema = z.object({
     .string({ required_error: "Please enter your username." })
     .min(4, "Username must be at least 4 characters long")
     .max(30, "Username must be no more than 30 characters long"),
-    // TODO: do we need this regex validation for username?
-    // .regex(
-    //   /^[a-zA-Z0-9_]+$/,
-    //   "Username must be alphanumeric with underscores allowed"
-    // ),
+  // TODO: do we need this regex validation for username?
+  // .regex(
+  //   /^[a-zA-Z0-9_]+$/,
+  //   "Username must be alphanumeric with underscores allowed"
+  // ),
   email: z
     .string({ required_error: "Please enter your email address." })
     .trim()
@@ -41,3 +41,13 @@ export const RegisterFormSchema = z.object({
 });
 
 export type RegisterFormData = z.infer<typeof RegisterFormSchema>;
+
+export const LoginFormSchema = z.object({
+  email: z
+    .string({ required_error: "Please enter your email address." })
+    .trim()
+    .email({ message: "Please enter a valid email format." }),
+  password: z.string({ required_error: "Please enter a new password." }),
+});
+
+export type LoginFormData = z.infer<typeof LoginFormSchema>;

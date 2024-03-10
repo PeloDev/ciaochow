@@ -1,11 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import reduxConstants from "../reduxConstants";
-type AppUser = any; // TODO: get from API
+import { AppUser } from "@/app/types";
+import { LoginSuccessResponseData } from "@/app/types/api";
 
-export const USER_DATA_KEY = "ppi_user";
+export const USER_DATA_KEY = "cc_user";
 
-const initialState: { data: AppUser | null } = {
-  data: null,
+const initialState: { user: AppUser | null; jwt: string | null } = {
+  user: null,
+  jwt: null,
 };
 
 const slice = createSlice({
@@ -13,14 +15,24 @@ const slice = createSlice({
   initialState,
   reducers: {
     setUser: (state, { payload: user }: PayloadAction<AppUser>) => {
-      state.data = user || null;
+      state.user = user || null;
     },
     unsetUser: (state) => {
-      state.data = null;
+      state.user = null;
+    },
+    loginUser: (
+      state,
+      { payload }: PayloadAction<LoginSuccessResponseData>
+    ) => {
+      state.user = payload.user || null;
+      state.jwt = payload.jwt || null;
+    },
+    logoutUser: (state) => {
+      state.user = null;
     },
   },
 });
 
-export const { setUser, unsetUser } = slice.actions;
+export const { setUser, unsetUser, loginUser, logoutUser } = slice.actions;
 
 export default slice.reducer;
