@@ -19,6 +19,7 @@ import { notifyErrorToast } from "@/lib/toast";
 import Spinner from "../components/Spinner";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { loginUser } from "@/lib/redux/features/user-slice";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const { control, handleSubmit } = useForm<z.infer<typeof LoginFormSchema>>({
@@ -28,6 +29,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const [login, { isLoading, error }] = useLoginMutation();
+  const router = useRouter();
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -37,10 +39,12 @@ export default function Login() {
       if (isErrorResponse(response)) {
         return;
       }
-      dispatch(loginUser(response.data));
+      dispatch(loginUser({ user: response.data.user }));
+      router.replace("/main");
     } catch (error) {
       notifyErrorToast("Error during login.");
       // TODO: send to logging service
+      console.error(error);
     }
   };
 
