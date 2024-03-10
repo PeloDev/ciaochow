@@ -2,7 +2,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 
-export default function AuthRedirect() {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const token = cookies().get("token");
   if (!token) {
     redirect("/welcome");
@@ -13,5 +17,5 @@ export default function AuthRedirect() {
     redirect("/login");
   }
 
-  redirect("/main");
+  return <>{children}</>;
 }
