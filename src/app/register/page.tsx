@@ -14,14 +14,11 @@ import {
 import { useRegisterMutation } from "@/lib/redux/api/api-slice";
 import { RegisterFormData, RegisterFormSchema } from "../types/forms";
 import { isErrorResponse } from "../types";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { notifySuccessToast } from "@/lib/toast";
 
 export default function Register() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterFormData>({
+  const { control, handleSubmit, formState } = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterFormSchema),
   });
 
@@ -34,11 +31,13 @@ export default function Register() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       const response = await register(data);
-      if (isErrorResponse(response)) {
-        throw response.error;
+      if (!isErrorResponse(response)) {
+        notifySuccessToast(`"${data.email}" registered succesfully.`);
+        setTimeout(() => {
+          notifySuccessToast("Please login.", { icon: null });
+          router.replace("login");
+        }, 1000);
       }
-      // TODO: show success toast message and call to login
-      router.replace("login");
     } catch (error) {
       // TODO: show error toast message
       console.error(error);
@@ -82,6 +81,7 @@ export default function Register() {
           inputProps={{
             placeholder: "chowder",
           }}
+          isInErrorState={!!error}
         />
         <FormInput
           name="email"
@@ -90,6 +90,7 @@ export default function Register() {
           inputProps={{
             placeholder: "your.email@address.com",
           }}
+          isInErrorState={!!error}
         />
         <FormInput
           name="password"
@@ -104,6 +105,7 @@ export default function Register() {
             // TODO: should we just use a different input name, or just keep this behaviour?
             autoComplete: "new-password",
           }}
+          isInErrorState={!!error}
           iconRight={
             <button type="button" onClick={togglePasswordVisibility}>
               <Image

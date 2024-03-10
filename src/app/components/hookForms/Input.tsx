@@ -9,12 +9,14 @@ interface IProps<FormValues extends FieldValues>
   label?: string;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   iconRight?: React.ReactNode;
+  isInErrorState?: boolean;
 }
 
 export default function FormInput<FormValues extends FieldValues>({
   label,
   inputProps,
   iconRight,
+  isInErrorState,
   ...props
 }: IProps<FormValues>) {
   const { field, fieldState } = useController(props);
@@ -30,7 +32,7 @@ export default function FormInput<FormValues extends FieldValues>({
           {...field}
           {...inputProps}
           className={`bg-ccFormBg text-xs text-ccBlack py-4 px-2 rounded-[10px] w-full ${
-            !!fieldState.error ? "border-red-600 border-[1px]" : ""
+            (!!fieldState.error || !!isInErrorState) ? "border-red-600 border-[1px]" : ""
           } ${inputProps?.className ?? ""}`}
         />
         {iconRight && (
