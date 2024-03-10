@@ -10,7 +10,7 @@ import { LoginFormData, RegisterFormData } from "@/app/types/forms";
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 
 function isHydrateAction(action: Action): action is PayloadAction<RootState> {
   return action.type === HYDRATE;
@@ -80,8 +80,8 @@ export const apiSlice = createApi({
       getUser: builder.query<ApiResponse, void>({
         query: () => "user",
       }),
-      getChows: builder.query<ApiResponse, void>({
-        query: () => "chows",
+      getChows: builder.query<ApiResponse, { itemNumber?: number }>({
+        query: ({ itemNumber = 1 }) => `chows/?itemNo=${itemNumber}`,
       }),
     };
   },
@@ -93,5 +93,6 @@ export const {
   useLogoutMutation,
   useForgotPasswordMutation,
   useLazyGetUserQuery,
+  useGetChowsQuery,
   useLazyGetChowsQuery,
 } = apiSlice;
