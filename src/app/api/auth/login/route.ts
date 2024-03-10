@@ -4,7 +4,6 @@ import { getMessageFromApiError } from "../../helpers";
 
 export async function POST(req: Request) {
   const loginFormData = await req.json();
-  console.log({loginFormData});
   
   try {
     const res = await fetch(`${CC_API_BASE_URL}/auth/local`, {
