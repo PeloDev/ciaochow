@@ -17,5 +17,13 @@ export default function RootLayout({
     redirect("/login");
   }
 
+  /**
+   * TODO:
+   * If user is not set in state, we cannot retrieve their data with a valid token.
+   * Ideally there would be an API endpoint to fetch the user data using the valid token in cookies?
+   * We would use that here (when we're sure the token is valid) to retrieve the user data and update
+   * the user-slice...
+   */
+
   return <>{children}</>;
 }
