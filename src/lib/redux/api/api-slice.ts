@@ -3,7 +3,7 @@ import reduxConstants from "../reduxConstants";
 import { RootState } from "../store";
 import { ApiResponse } from "../../../app/types"; // TODO: should this be in lib?
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
@@ -39,7 +39,7 @@ export const apiSlice = createApi({
       register: builder.mutation({
         query: (body) => {
           return {
-            url: "auth/register",
+            url: "auth/local/register",
             method: "POST",
             body,
           };
