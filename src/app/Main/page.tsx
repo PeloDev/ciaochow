@@ -76,12 +76,14 @@ export default function Main({ defaultTab = "description" }: IProps) {
       );
     });
     setChowImageUrls(chowImageUrls);
-    window.history.pushState({}, "", `/main/${tab}?chow=${chow.id}`);
+    window.history.replaceState({}, "", `/main/${tab}?chow=${chow.id}`);
   }, [data]);
 
   useEffect(() => {
-    window.history.pushState({}, "", `/main/${tab}`);
-  }, [tab]);
+    if (data?.chow.id) {
+      window.history.replaceState({}, "", `/main/${tab}?chow=${data.chow.id}`);
+    }
+  }, [tab, data?.chow.id]);
 
   useEffect(() => {
     if (error) {

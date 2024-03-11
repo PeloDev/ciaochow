@@ -125,7 +125,7 @@ export default function Login() {
       </form>
       <Link href="/register">
         <p className="text-ccGreenAlt text-xs text-center">
-          Don't have an account? <span className="font-bold">Register</span>
+          Don&apos;t have an account? <span className="font-bold">Register</span>
         </p>
       </Link>
     </div>
