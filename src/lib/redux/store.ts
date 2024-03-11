@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import reduxConstants from "./reduxConstants";
 
 import { apiSlice } from "./api/api-slice";
-import authReducer from "./features/auth-slice";
+import favouritesReducer from "./features/favourites-slice";
 import userReducer from "./features/user-slice";
 import { rtkQueryErrorNotifier } from "./api/api-error-middleware";
 
 export const makeStore = () =>
   configureStore({
     reducer: {
-      [reduxConstants.AUTH.NAME]: authReducer,
+      [reduxConstants.FAVOURITES.NAME]: favouritesReducer,
       [reduxConstants.USER.NAME]: userReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },

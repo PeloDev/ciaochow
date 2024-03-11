@@ -1,6 +1,6 @@
 const reduxConstants = {
-  AUTH: {
-    NAME: "auth" as const,
+  FAVOURITES: {
+    NAME: "favourites" as const,
   },
   API: {
     NAME: "api" as const,

@@ -20,6 +20,7 @@ const config: Config = {
         ccGray: "#BDBDBD",
         ccBlack: "#333333",
         ccFormBg: "#F2F2F2",
+        ccTextGray: "#828282",
       },
     },
   },
